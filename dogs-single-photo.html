@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dogs</title>
+    <link rel="icon" href="paw-print.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    body {
+    background-color: rgba(144, 101, 101, 0.369);
+    }
+    .paw-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        text-align: center; 
+    }
+    .paw {
+        width: 13%;
+    }
+    .title{
+        margin-bottom: 10px;
+        font-size: 50px;
+        font-family: 'Amatic SC', sans-serif;
+    }
+    .slogan{
+        margin-bottom: 20px;
+        font-size: 30px;
+        font-family: 'Amatic SC', sans-serif;
+    }
+    img {
+        border-radius: 10%;
+        max-width: 100%;
+        height: auto; 
+    }
+    #breeds {
+        background-color: rgba(144, 101, 101, 0.369);
+        border: none;
+        color: rgba(53, 38, 38, 0.814);
+        text-align: center;
+        width: 100%;
+        font-size:17px;
+        box-shadow: 5px 6px 5px 1px rgba(178, 145, 145, 0.369);
+    }  
+    .dogPhoto {
+        margin: 20px 0; 
+        box-shadow: 5px 6px 5px 1px rgba(178, 145, 145, 0.369);
+    }
+
+    #dogImageContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        margin: 20px 0; 
+    }
+
+    .name {
+        color: rgba(53, 38, 38, 0.814);    
+    }
+
+    @media screen and (max-width: 500px) {
+    .paw {
+        width: 30%;
+    }
+}
+</style>
+<body>
+    <div class="container mt-4">
+        <div class="paw-container row">
+            <img src="paw-print.png" class="paw mt-3">
+            <p class="title"><b>Breed Beauties</b></p>
+            <p class="slogan">A Pictorial Journey Through Canine Diversity</p>
+        </div>
+        <form>
+            <div class="my-3">
+                <select id="breeds" class="form-select my-3 rounded-5 px-4" onchange="getDogImage()">
+                </select>
+            </div>
+        </form>
+        <div id="dogImageContainer"></div>
+    </div>
+<script>
+// 1. Gauti visas veisles pagal nuorodą
+fetch("https://dog.ceo/api/breeds/list/all")
+.then(response => response.json())
+.then(response => {
+// 2. Sutvarkyti iš serverio gautą objektą
+    const breeds = [];
+    for (const breed in response.message) {
+        breeds.push(breed);
+    // 3. Visas veisles atvaizduoti <select> HTML elemente
+    const breedsSelect = document.getElementById('breeds');
+    const option = document.createElement('option');
+    option.value = breed;
+    option.text = breed;
+    breedsSelect.appendChild(option);
+}
+// Atvaizduoti nuotrauka tik puslapiui atsidarius
+    getDogImage();
+});
+
+function getDogImage() {
+    const breedsSelect = document.getElementById('breeds');
+    const selectedBreed = breedsSelect.value;
+// 4. Dinamiškai generuoti kreipimosi adresą ir gauti nuotrauką
+fetch(`https://dog.ceo/api/breed/${selectedBreed}/images/random`)
+    .then(response => response.json())
+    .then(response => {
+        const dogImageContainer = document.getElementById('dogImageContainer');
+        const dogImage = response.message;
+        // 5. // Atvaizduoti šuns nuotrauką ir parašyti jo veislę
+        dogImageContainer.innerHTML = `<img src="${dogImage}" class="dogPhoto" alt="${selectedBreed}"><p class="name"><b>Breed:</b> ${selectedBreed}</p>`;
+    });
+}
+</script>
+</body>
+</html>
+
