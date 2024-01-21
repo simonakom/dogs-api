@@ -9,6 +9,3 @@ Application is developed using javascript and bootstrap to practice API. API use
 
 
 
-
-
-
